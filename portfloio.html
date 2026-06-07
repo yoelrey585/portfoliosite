@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Rogue Astronaut — Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f8f7f4;
+    --bg2: #f0ede8;
+    --text: #1a1917;
+    --muted: #6b6860;
+    --accent: #2b4d3a;
+    --border: #ddd9d2;
+    --white: #ffffff;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    font-size: 16px;
+    line-height: 1.7;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 3rem;
+    background: rgba(248, 247, 244, 0.92);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1rem;
+    letter-spacing: 0.02em;
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    text-decoration: none;
+    color: var(--muted);
+    font-size: 0.85rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--text); }
+
+  /* HERO */
+  #hero {
+    min-height: 60vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 0 3rem 4rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .hero-eyebrow {
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 1rem;
+  }
+
+  .hero-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2.5rem, 7vw, 5rem);
+    line-height: 1.0;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-name em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  /* SECTION BASE */
+  section {
+    padding: 5rem 3rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-header {
+    margin-bottom: 3rem;
+  }
+
+  .section-category {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2rem;
+    letter-spacing: -0.01em;
+    margin-bottom: 0.5rem;
+  }
+
+  .section-divider {
+    width: 60px;
+    height: 2px;
+    background: var(--accent);
+    margin-top: 0.75rem;
+  }
+
+  /* PROJECT GRID */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 2rem;
+  }
+
+  .project-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .project-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.05);
+  }
+
+  /* IMAGE GALLERY inside card */
+  .project-gallery {
+    position: relative;
+    height: 260px;
+    overflow: hidden;
+    background: var(--bg2);
+  }
+
+  .gallery-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  .gallery-slide {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    object-fit: cover;
+  }
+
+  .gallery-slide.active {
+    opacity: 1;
+  }
+
+  .gallery-nav {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    display: flex;
+    gap: 8px;
+    z-index: 5;
+  }
+
+  .gallery-btn {
+    background: rgba(0, 0, 0, 0.6);
+    border: none;
+    color: white;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+  }
+
+  .gallery-btn:hover {
+    background: var(--accent);
+  }
+
+  .gallery-dots {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    display: flex;
+    gap: 6px;
+    z-index: 5;
+  }
+
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+  }
+
+  .dot.active {
+    background: var(--accent);
+    width: 18px;
+    border-radius: 3px;
+  }
+
+  .project-body {
+    padding: 1.5rem;
+  }
+
+  .project-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .project-desc {
+    font-size: 0.85rem;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+
+  .project-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .tag {
+    font-size: 0.7rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 0.25rem 0.7rem;
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    color: var(--muted);
+    background: var(--bg);
+  }
+
+  /* CONTACT SECTION */
+  #contact {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+    padding: 5rem 3rem;
+  }
+
+  .contact-heading {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    line-height: 1.2;
+  }
+
+  .contact-heading em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .contact-links {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .contact-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+    border-top: 1px solid var(--border);
+    text-decoration: none;
+    color: var(--text);
+    transition: color 0.2s;
+  }
+
+  .contact-item:last-child {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .contact-item:hover {
+    color: var(--accent);
+  }
+
+  .contact-item-label {
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .contact-arrow {
+    font-size: 1.2rem;
+    transition: transform 0.2s;
+  }
+
+  .contact-item:hover .contact-arrow {
+    transform: translate(4px, -4px);
+  }
+
+  /* FOOTER */
+  footer {
+    padding: 2rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { gap: 1.25rem; }
+    #hero, section { padding-left: 1.5rem; padding-right: 1.5rem; }
+    .projects-grid { grid-template-columns: 1fr; }
+    #contact { grid-template-columns: 1fr; gap: 2rem; padding: 3rem 1.5rem; }
+    footer { padding: 1.5rem; flex-direction: column; gap: 0.5rem; text-align: center; }
+    .gallery-nav { bottom: 8px; right: 8px; }
+    .gallery-btn { width: 28px; height: 28px; font-size: 0.8rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="nav-logo">The Rogue Astronaut</a>
+  <ul class="nav-links">
+    <li><a href="#biomedical">Biomedical</a></li>
+    <li><a href="#modelling">3D Modelling</a></li>
+    <li><a href="#creative">Video & Photo</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <p class="hero-eyebrow">Biomedical Engineer · 3D Artist · Creator</p>
+  <h1 class="hero-name">The Rogue <em>Astronaut</em></h1>
+</section>
+
+<!-- ============================================ -->
+<!-- BIOMEDICAL ENGINEERING SECTION               -->
+<!-- ============================================ -->
+<section id="biomedical">
+  <div class="section-header">
+    <h2 class="section-category">Biomedical Engineering</h2>
+    <div class="section-divider"></div>
+  </div>
+
+  <div class="projects-grid">
+    <!-- Project 1: VILI Study -->
+    <div class="project-card">
+      <div class="project-gallery" id="gallery1">
+        <div class="gallery-container">
+          <img src="https://placehold.co/600x400/2b4d3a/white?text=Lung+Airway+Model" class="gallery-slide active" alt="Lung airway model">
+          <img src="https://placehold.co/600x400/3a5c4a/white?text=CFD+Simulation+Results" class="gallery-slide" alt="CFD simulation results">
+          <img src="https://placehold.co/600x400/2b4d3a/white?text=Pressure+Threshold+Graph" class="gallery-slide" alt="Pressure threshold graph">
+        </div>
+        <div class="gallery-dots">
+          <span class="dot active" data-img="0"></span>
+          <span class="dot" data-img="1"></span>
+          <span class="dot" data-img="2"></span>
+        </div>
+        <div class="gallery-nav">
+          <button class="gallery-btn prev">←</button>
+          <button class="gallery-btn next">→</button>
+        </div>
+      </div>
+      <div class="project-body">
+        <h3 class="project-title">Simulating Pulmonary Mechanics</h3>
+        <p class="project-desc">3D lung airway model (trachea to 6th generation) in SolidWorks with CFD-FEA analysis in ANSYS identifying pressure thresholds for VILI.</p>
+        <div class="project-tags">
+          <span class="tag">SolidWorks</span>
+          <span class="tag">ANSYS</span>
+          <span class="tag">CFD/FEA</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Project 2: Prosthetic Leg -->
+    <div class="project-card">
+      <div class="project-gallery" id="gallery2">
+        <div class="gallery-container">
+          <img src="https://placehold.co/600x400/2b4d3a/white?text=Prosthetic+Leg+Assembly" class="gallery-slide active" alt="Prosthetic leg assembly">
+          <img src="https://placehold.co/600x400/3a5c4a/white?text=FEA+Stress+Analysis" class="gallery-slide" alt="FEA stress analysis">
+          <img src="https://placehold.co/600x400/2b4d3a/white?text=Modular+Components" class="gallery-slide" alt="Modular components">
+        </div>
+        <div class="gallery-dots">
+          <span class="dot active" data-img="0"></span>
+          <span class="dot" data-img="1"></span>
+          <span class="dot" data-img="2"></span>
+        </div>
+        <div class="gallery-nav">
+          <button class="gallery-btn prev">←</button>
+          <button class="gallery-btn next">→</button>
+        </div>
+      </div>
+      <div class="project-body">
+        <h3 class="project-title">Above-Knee Prosthetic Leg</h3>
+        <p class="project-desc">Full design cycle from concept to FEA validation. Modular components with titanium and polyethylene. Max displacement of 2.1mm under 700N load.</p>
+        <div class="project-tags">
+          <span class="tag">SolidWorks</span>
+          <span class="tag">FEA</span>
+          <span class="tag">Material Analysis</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Project 3: Sport Equipment -->
+    <div class="project-card">
+      <div class="project-gallery" id="gallery3">
+        <div class="gallery-container">
+          <img src="https://placehold.co/600x400/2b4d3a/white?text=Helmet+Design" class="gallery-slide active" alt="Helmet design">
+          <img src="https://placehold.co/600x400/3a5c4a/white?text=Knee+Brace+Model" class="gallery-slide" alt="Knee brace model">
+          <img src="https://placehold.co/600x400/2b4d3a/white?text=Impact+Simulation" class="gallery-slide" alt="Impact simulation">
+        </div>
+        <div class="gallery-dots">
+          <span class="dot active" data-img="0"></span>
+          <span class="dot" data-img="1"></span>
+          <span class="dot" data-img="2"></span>
+        </div>
+        <div class="gallery-nav">
+          <button class="gallery-btn prev">←</button>
+          <button class="gallery-btn next">→</button>
+        </div>
+      </div>
+      <div class="project-body">
+        <h3 class="project-title">Protective Sport Equipment Suite</h3>
+        <p class="project-desc">Double-layer helmet (polycarbonate + viscoelastic), carbon fibre knee brace, and tibia support sleeve. Validated under real-world impact loads.</p>
+        <div class="project-tags">
+          <span class="tag">SolidWorks</span>
+          <span class="tag">ANSYS FEA</span>
+          <span class="tag">Biomechanics</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================ -->
+<!-- 3D MODELLING SECTION                        -->
+<!-- ============================================ -->
+<section id="modelling">
+  <div class="section-header">
+    <h2 class="section-category">3D Modelling</h2>
+    <div class="section-divider"></div>
+  </div>
+
+  <div class="projects-grid">
+    <!-- Project 1: Infinity Castle -->
+    <div class="project-card">
+      <div class="project-gallery" id="gallery4">
+        <div class="gallery-container">
+          <img src="https://placehold.co/600x400/2b2d3a/white?text=Infinity+Castle+Wide+Shot" class="gallery-slide active" alt="Infinity Castle wide view">
+          <img src="https://placehold.co/600x400/2b2d3a/white?text=Infinity+Castle+Details" class="gallery-slide" alt="Infinity Castle close up">
+          <img src="https://placehold.co/600x400/2b2d3a/white?text=Infinity+Castle+Lighting" class="gallery-slide" alt="Infinity Castle dramatic lighting">
+        </div>
+        <div class="gallery-dots">
+          <span class="dot active" data-img="0"></span>
+          <span class="dot" data-img="1"></span>
+          <span class="dot" data-img="2"></span>
+        </div>
+        <div class="gallery-nav">
+          <button class="gallery-btn prev">←</button>
+          <button class="gallery-btn next">→</button>
+        </div>
+      </div>
+      <div class="project-body">
+        <h3 class="project-title">Infinity Castle (Demon Slayer)</h3>
+        <p class="project-desc">Multi-level floating fortress inspired by the anime, focusing on dramatic lighting, atmospheric depth, and intricate wooden and stone textures.</p>
+        <div class="project-tags">
+          <span class="tag">Blender</span>
+          <span class="tag">Environment Design</span>
+          <span class="tag">Lighting</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Project 2: Mushroom -->
+    <div class="project-card">
+      <div class="project-gallery" id="gallery5">
+        <div class="gallery-container">
+          <img src="https://placehold.co/600x400/3a2d2a/white?text=Mushroom+Main+Shot" class="gallery-slide active" alt="Mushroom main view">
+          <img src="https://placehold.co/600x400/3a2d2a/white?text=Mushroom+Glowing+Details" class="gallery-slide" alt="Mushroom glowing elements">
+          <img src="https://placehold.co/600x400/3a2d2a/white?text=Mushroom+Surreal+Texture" class="gallery-slide" alt="Mushroom surreal textures">
+        </div>
+        <div class="gallery-dots">
+          <span class="dot active" data-img="0"></span>
+          <span class="dot" data-img="1"></span>
+          <span class="dot" data-img="2"></span>
+        </div>
+        <div class="gallery-nav">
+          <button class="gallery-btn prev">←</button>
+          <button class="gallery-btn next">→</button>
+        </div>
+      </div>
+      <div class="project-body">
+        <h3 class="project-title">Mushroom (Common Side Effects)</h3>
+        <p class="project-desc">Stylized oversized mushroom with surreal textures and glowing elements to visualize abstract health-related side effects in an engaging way.</p>
+        <div class="project-tags">
+          <span class="tag">Blender</span>
+          <span class="tag">Stylized</span>
+          <span class="tag">Surreal Textures</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Project 3: Random House Environment -->
+    <div class="project-card">
+      <div class="project-gallery" id="gallery6">
+        <div class="gallery-container">
+          <img src="https://placehold.co/600x400/4a5a3a/white?text=House+Daytime" class="gallery-slide active" alt="House environment daytime">
+          <img src="https://placehold.co/600x400/4a5a3a/white?text=House+Night+Lighting" class="gallery-slide" alt="House environment night">
+          <img src="https://placehold.co/600x400/4a5a3a/white?text=House+Foliage+Details" class="gallery-slide" alt="House foliage scattering">
+        </div>
+        <div class="gallery-dots">
+          <span class="dot active" data-img="0"></span>
+          <span class="dot" data-img="1"></span>
+          <span class="dot" data-img="2"></span>
+        </div>
+        <div class="gallery-nav">
+          <button class="gallery-btn prev">←</button>
+          <button class="gallery-btn next">→</button>
+        </div>
+      </div>
+      <div class="project-body">
+        <h3 class="project-title">Random House Environment</h3>
+        <p class="project-desc">Detailed residential house within a natural landscape — realistic material shading, foliage scattering, and time-of-day lighting cycles.</p>
+        <div class="project-tags">
+          <span class="tag">Blender</span>
+          <span class="tag">Landscape</span>
+          <span class="tag">Lighting Cycles</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Project 4: Cute Monster Sculpt -->
+    <div class="project-card">
+      <div class="project-gallery" id="gallery7">
+        <div class="gallery-container">
+          <img src="https://placehold.co/600x400/5a4a6a/white?text=Monster+Front+View" class="gallery-slide active" alt="Cute monster front view">
+          <img src="https://placehold.co/600x400/5a4a6a/white?text=Monster+Side+View" class="gallery-slide" alt="Cute monster side view">
+          <img src="https://placehold.co/600x400/5a4a6a/white?text=Monster+Detail+Closeup" class="gallery-slide" alt="Cute monster close up">
+        </div>
+        <div class="gallery-dots">
+          <span class="dot active" data-img="0"></span>
+          <span class="dot" data-img="1"></span>
+          <span class="dot" data-img="2"></span>
+        </div>
+        <div class="gallery-nav">
+          <button class="gallery-btn prev">←</button>
+          <button class="gallery-btn next">→</button>
+        </div>
+      </div>
+      <div class="project-body">
+        <h3 class="project-title">Cute Monster Sculpt</h3>
+        <p class="project-desc">Original tiny monster with expressive form, smooth surface, and playful detail — focusing on appeal, character, and clean mesh flow.</p>
+        <div class="project-tags">
+          <span class="tag">Blender</span>
+          <span class="tag">Sculpting</span>
+          <span class="tag">Character Design</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================ -->
+<!-- VIDEO & PHOTO EDITING SECTION               -->
+<!-- ============================================ -->
+<section id="creative">
+  <div class="section-header">
+    <h2 class="section-category">Video & Photo Editing</h2>
+    <div class="section-divider"></div>
+  </div>
+
+  <div class="projects-grid">
+    <!-- Project 1: Commentary Video -->
+    <div class="project-card">
+      <div class="project-gallery" id="gallery8">
+        <div class="gallery-container">
+          <img src="https://placehold.co/600x400/8a8178/white?text=Commentary+Video+Thumbnail" class="gallery-slide active" alt="Commentary video thumbnail">
+          <img src="https://placehold.co/600x400/7a7168/white?text=Editing+Timeline+Screenshot" class="gallery-slide" alt="Editing timeline">
+          <img src="https://placehold.co/600x400/8a8178/white?text=Video+Scene+Example" class="gallery-slide" alt="Video scene example">
+        </div>
+        <div class="gallery-dots">
+          <span class="dot active" data-img="0"></span>
+          <span class="dot" data-img="1"></span>
+          <span class="dot" data-img="2"></span>
+        </div>
+        <div class="gallery-nav">
+          <button class="gallery-btn prev">←</button>
+          <button class="gallery-btn next">→</button>
+        </div>
+      </div>
+      <div class="project-body">
+        <h3 class="project-title">"The Thin Line Between Envy & Admiration"</h3>
+        <p class="project-desc">Satirical commentary video — scripting, recording, editing, and publishing. Balances comedy, satire, and genuine psychological insight.</p>
+        <div class="project-tags">
+          <span class="tag">Premiere Pro</span>
+          <span class="tag">Scripting</span>
+          <span class="tag">Voiceover</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Project 2: Commentary Video -->
+    <div class="project-card">
+      <div class="project-gallery" id="gallery8">
+        <div class="gallery-container">
+          <img src="https://placehold.co/600x400/8a8178/white?text=Commentary+Video+Thumbnail" class="gallery-slide active" alt="Commentary video thumbnail">
+          <img src="https://placehold.co/600x400/7a7168/white?text=Editing+Timeline+Screenshot" class="gallery-slide" alt="Editing timeline">
+          <img src="https://placehold.co/600x400/8a8178/white?text=Video+Scene+Example" class="gallery-slide" alt="Video scene example">
+        </div>
+        <div class="gallery-dots">
+          <span class="dot active" data-img="0"></span>
+          <span class="dot" data-img="1"></span>
+          <span class="dot" data-img="2"></span>
+        </div>
+        <div class="gallery-nav">
+          <button class="gallery-btn prev">←</button>
+          <button class="gallery-btn next">→</button>
+        </div>
+      </div>
+      <div class="project-body">
+        <h3 class="project-title">"Why You Always Feel Like You Are Losing"</h3>
+        <p class="project-desc">Satirical commentary video — scripting, recording, editing, and publishing. Balances comedy, satire, and genuine psychological insight.</p>
+        <div class="project-tags">
+          <span class="tag">Premiere Pro</span>
+          <span class="tag">Scripting</span>
+          <span class="tag">Voiceover</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Project 3: Fight Scene Analysis -->
+    <div class="project-card">
+      <div class="project-gallery" id="gallery9">
+        <div class="gallery-container">
+          <img src="https://placehold.co/600x400/8a8178/white?text=Analysis+Video+Thumbnail" class="gallery-slide active" alt="Analysis video thumbnail">
+          <img src="https://placehold.co/600x400/7a7168/white?text=Motion+Graphics+Example" class="gallery-slide" alt="Motion graphics example">
+          <img src="https://placehold.co/600x400/8a8178/white?text=Fight+Scene+Breakdown" class="gallery-slide" alt="Fight scene breakdown">
+        </div>
+        <div class="gallery-dots">
+          <span class="dot active" data-img="0"></span>
+          <span class="dot" data-img="1"></span>
+          <span class="dot" data-img="2"></span>
+        </div>
+        <div class="gallery-nav">
+          <button class="gallery-btn prev">←</button>
+          <button class="gallery-btn next">→</button>
+        </div>
+      </div>
+      <div class="project-body">
+        <h3 class="project-title">"Blue Eye Samurai" Fight Scene Analysis</h3>
+        <p class="project-desc">Two-part analytical series deconstructing fight sequences — narrative depth, character development, and choreography.</p>
+        <div class="project-tags">
+          <span class="tag">Premiere Pro</span>
+          <span class="tag">After Effects</span>
+          <span class="tag">Motion Graphics</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Project 4: Graphic Design -->
+    <div class="project-card">
+      <div class="project-gallery" id="gallery10">
+        <div class="gallery-container">
+          <img src="https://placehold.co/600x400/8a8178/white?text=Juice+Bar+Flyer+Design" class="gallery-slide active" alt="Juice bar flyer">
+          <img src="https://placehold.co/600x400/7a7168/white?text=Black+Friday+Poster" class="gallery-slide" alt="Black Friday poster">
+          <img src="https://placehold.co/600x400/8a8178/white?text=Social+Media+Graphics" class="gallery-slide" alt="Social media graphics">
+        </div>
+        <div class="gallery-dots">
+          <span class="dot active" data-img="0"></span>
+          <span class="dot" data-img="1"></span>
+          <span class="dot" data-img="2"></span>
+        </div>
+        <div class="gallery-nav">
+          <button class="gallery-btn prev">←</button>
+          <button class="gallery-btn next">→</button>
+        </div>
+      </div>
+      <div class="project-body">
+        <h3 class="project-title">Winnie's Juice Bar — Brand & Promotion</h3>
+        <p class="project-desc">Bundle deal flyers, Black Friday poster, and social media graphics. Consistent colour palette and typography across all formats.</p>
+        <div class="project-tags">
+          <span class="tag">Photoshop</span>
+          <span class="tag">Illustrator</span>
+          <span class="tag">Typography</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================ -->
+<!-- CONTACT SECTION                             -->
+<!-- ============================================ -->
+<section id="contact">
+  <div>
+    <h2 class="contact-heading">Let's build<br>something <em>real.</em></h2>
+  </div>
+  <div>
+    <div class="contact-links">
+      <a href="mailto:sabastiandarko@outlook.com" class="contact-item">
+        <span class="contact-item-label">Email</span>
+        <span class="contact-arrow">↗</span>
+      </a>
+      <a href="https://linkedin.com/in/asuo-d" target="_blank" class="contact-item">
+        <span class="contact-item-label">LinkedIn</span>
+        <span class="contact-arrow">↗</span>
+      </a>
+      <a href="https://github.com/yoelrey585/" target="_blank" class="contact-item">
+        <span class="contact-item-label">GitHub</span>
+        <span class="contact-arrow">↗</span>
+      </a>
+      <a href="https://drive.google.com/drive/folders/YOUR_FOLDER_ID_HERE" target="_blank" class="contact-item">
+        <span class="contact-item-label">Video Portfolio</span>
+        <span class="contact-arrow">↗</span>
+      </a>
+      <a href="https://youtube.com/@RogueAstronaut-u5x" target="_blank" class="contact-item">
+        <span class="contact-item-label">YouTube</span>
+        <span class="contact-arrow">↗</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>© 2025 The Rogue Astronaut</span>
+  <span>Biomedical Engineer · 3D Artist · Creator</span>
+</footer>
+
+<!-- Gallery JavaScript -->
+<script>
+  function initGallery(galleryId) {
+    const gallery = document.getElementById(galleryId);
+    if (!gallery) return;
+    
+    const slides = gallery.querySelectorAll('.gallery-slide');
+    const dots = gallery.querySelectorAll('.dot');
+    const prevBtn = gallery.querySelector('.prev');
+    const nextBtn = gallery.querySelector('.next');
+    
+    if (slides.length === 0) return;
+    
+    let currentIndex = 0;
+    
+    function showSlide(index) {
+      slides.forEach((slide, i) => {
+        slide.classList.toggle('active', i === index);
+      });
+      dots.forEach((dot, i) => {
+        dot.classList.toggle('active', i === index);
+      });
+      currentIndex = index;
+    }
+    
+    function nextSlide() {
+      let newIndex = currentIndex + 1;
+      if (newIndex >= slides.length) newIndex = 0;
+      showSlide(newIndex);
+    }
+    
+    function prevSlide() {
+      let newIndex = currentIndex - 1;
+      if (newIndex < 0) newIndex = slides.length - 1;
+      showSlide(newIndex);
+    }
+    
+    if (prevBtn && nextBtn) {
+      prevBtn.addEventListener('click', prevSlide);
+      nextBtn.addEventListener('click', nextSlide);
+    }
+    
+    dots.forEach((dot, i) => {
+      dot.addEventListener('click', () => showSlide(i));
+    });
+  }
+  
+  // Initialize all galleries (10 total)
+  for (let i = 1; i <= 10; i++) {
+    initGallery(`gallery${i}`);
+  }
+</script>
+
+</body>
+</html>
